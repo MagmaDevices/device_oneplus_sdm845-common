@@ -22,16 +22,28 @@ $(call inherit-product, vendor/oneplus/sdm845-common/sdm845-common-vendor.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay
-    
+    $(LOCAL_PATH)/overlay \
+    $(LOCAL_PATH)/overlay-lineage
+
+PRODUCT_PACKAGES += \
+    OnePlusIconShapeCircleOverlay \
+    OnePlusIconShapeRoundedRectOverlay \
+    OnePlusIconShapeSquareOverlay \
+    OnePlusIconShapeSquircleOverlay \
+    OnePlusIconShapeTeardropOverlay
+
 # Properties
 -include $(LOCAL_PATH)/system_prop.mk
 
 PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
 
+# VNDK
+PRODUCT_TARGET_VNDK_VERSION := 29
+
 # Permissions
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+    frameworks/native/data/etc/android.hardware.telephony.ims.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.telephony.ims.xml \
+    frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/handheld_core_hardware.xml
 
 # A/B
 AB_OTA_UPDATER := true
@@ -61,15 +73,15 @@ PRODUCT_PACKAGES += \
     libaacwrapper
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio/audio_policy_configuration.xml:system/etc/audio_policy_configuration.xml
+    $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION)/etc/audio/audio_policy_configuration.xml \
+    $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION)/etc/audio_policy_configuration.xml
 
 # Boot control
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl.recovery \
     bootctrl.sdm845.recovery
 
-#PRODUCT_PACKAGES_DEBUG += \
-    android.hardware.boot@1.0-impl.recovery \
+PRODUCT_PACKAGES_DEBUG += \
     bootctl
 
 # Camera
@@ -85,6 +97,7 @@ PRODUCT_PACKAGES += \
 # Display
 PRODUCT_PACKAGES += \
     libdisplayconfig \
+    libqdMetaData \
     libqdMetaData.system \
     libvulkan \
     vendor.display.config@1.0
@@ -95,29 +108,34 @@ PRODUCT_PACKAGES += \
 
 # HotwordEnrollement app permissions
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/privapp-permissions-hotword.xml:system/etc/permissions/privapp-permissions-hotword.xml
+    $(LOCAL_PATH)/configs/privapp-permissions-hotword.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-hotword.xml
 
 # Input
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/idc/gf_input.idc:system/usr/idc/gf_input.idc \
-    $(LOCAL_PATH)/keylayout/gf_input.kl:system/usr/keylayout/gf_input.kl
+    $(LOCAL_PATH)/idc/gf_input.idc:$(TARGET_COPY_OUT_SYSTEM)/usr/idc/gf_input.idc \
+    $(LOCAL_PATH)/keylayout/gf_input.kl:$(TARGET_COPY_OUT_SYSTEM)/usr/keylayout/gf_input.kl
 
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.oneplus_sdm845
 
+# LiveDisplay
+#PRODUCT_PACKAGES += \
+#    lineage.livedisplay@2.0-service.oneplus_sdm845
+
 # Media
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/media_profiles_vendor.xml:system/etc/media_profiles_vendor.xml
+    $(LOCAL_PATH)/configs/media_profiles_vendor.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_profiles_vendor.xml
 
 # Net
 PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
 # NFC
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     android.hardware.nfc@1.0:64 \
     android.hardware.nfc@1.1:64 \
+    android.hardware.nfc@1.2:64 \
     android.hardware.secure_element@1.0:64 \
     com.android.nfc_extras \
     Tag \
@@ -133,11 +151,21 @@ PRODUCT_PACKAGES += \
     RemovePackages
 
 # Telephony
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
+    ims-ext-common \
+    ims_ext_common.xml \
+    qti-telephony-hidl-wrapper \
+    qti_telephony_hidl_wrapper.xml \
+    qti-telephony-utils \
+    qti_telephony_utils.xml \
     telephony-ext
 
-#PRODUCT_BOOT_JARS += \
+PRODUCT_BOOT_JARS += \
     telephony-ext
+
+# Touch
+PRODUCT_PACKAGES += \
+    lineage.touch@1.0-service.oneplus_sdm845
 
 # tri-state-key
 PRODUCT_PACKAGES += \
@@ -150,7 +178,6 @@ PRODUCT_PACKAGES += \
 
 # Update engine
 PRODUCT_PACKAGES += \
-    bootctrl.sdm845.recovery \
     update_engine \
     update_engine_sideload \
     update_verifier
@@ -159,11 +186,11 @@ PRODUCT_PACKAGES_DEBUG += \
     update_engine_client
 
 # WiFi Display
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     libnl
 
-#PRODUCT_BOOT_JARS += \
+PRODUCT_BOOT_JARS += \
     WfdCommon
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/privapp-permissions-wfd.xml:system/etc/permissions/privapp-permissions-wfd.xml
+    $(LOCAL_PATH)/configs/privapp-permissions-wfd.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-wfd.xml

@@ -51,6 +51,7 @@ BOARD_KERNEL_SEPARATED_DTBO := true
 NEED_KERNEL_MODULE_SYSTEM := true
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_SOURCE := kernel/oneplus/sdm845
+TARGET_KERNEL_CLANG_COMPILE := true
 
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
@@ -96,6 +97,12 @@ TARGET_ENABLE_MEDIADRM_64 := true
 JAVA_SOURCE_OVERLAYS := \
     org.lineageos.hardware|$(COMMON_PATH)/lineagehw|**/*.java
 
+# Filesystem
+TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
+
+# HIDL
+DEVICE_FRAMEWORK_MANIFEST_FILE := $(COMMON_PATH)/framework_manifest.xml
+
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608
@@ -115,7 +122,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USES_MKE2FS := true
 
 # Root
-BOARD_ROOT_EXTRA_FOLDERS := odm op1 op2
+BOARD_ROOT_EXTRA_FOLDERS := op1 op2 op_odm
 BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/persist:/persist \
     /vendor/bt_firmware:/bt_firmware \
@@ -131,8 +138,13 @@ PRIVATE_EXCLUDE_BUILD_TEST := true
 # Sepolicy
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(COMMON_PATH)/sepolicy/private
 
-BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/qcom/sepolicy/private
-BOARD_PLAT_PUBLIC_SEPOLICY_DIR += device/qcom/sepolicy/public
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR += \
+    device/qcom/sepolicy/private \
+    device/qcom/sepolicy/qva/private
+
+BOARD_PLAT_PUBLIC_SEPOLICY_DIR += \
+    device/qcom/sepolicy/public \
+    device/qcom/sepolicy/qva/public
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(COMMON_PATH)

@@ -15,6 +15,9 @@ on boot
 on charger
     write /sys/class/backlight/panel0-backlight/brightness 150
 
+service cvphalservice /system/bin/true
+    disabled
+
 service dashd /sbin/dashd
     class core
     critical
@@ -22,4 +25,7 @@ service dashd /sbin/dashd
     group root system
 
 service factory-hal-1-0 /system/bin/true
+    disabled
+
+service oneplus_brain_service /system/bin/true
     disabled
